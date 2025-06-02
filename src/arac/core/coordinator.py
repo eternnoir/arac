@@ -49,22 +49,16 @@ class AkashicCoordinator:
         # Load the coordinator prompt
         prompt_content = self._load_prompt_template(coordinator_config.prompt_template)
         
-        # Create MCP filesystem tools
-        mcp_tools = []
-        if self.config.mcp_tools.filesystem['enabled']:
-            filesystem_toolset = create_filesystem_toolset(self.project_root)
-            mcp_tools.append(filesystem_toolset)
-        
         # Create specialized sub-agents
         sub_agents = self._create_sub_agents()
         
-        # Create the coordinator agent
+        # Create the coordinator agent (no filesystem tools - pure orchestration)
         coordinator = Agent(
             name="akashic_coordinator",
             model=LiteLlm(model=coordinator_config.model),
-            description="AkashicRecords coordinator agent for file-based knowledge management",
+            description="AkashicRecords coordinator agent for task delegation and orchestration",
             instruction=prompt_content,
-            tools=mcp_tools,
+            tools=[],  # No direct tools - pure delegation
             sub_agents=sub_agents
         )
         
@@ -135,33 +129,48 @@ class AkashicCoordinator:
 
 ## Core Responsibilities
 
-1. **File System Operations**: Navigate, query, create, modify, and organize files following directory structure rules
-2. **Agent Coordination**: Delegate specialized tasks to appropriate sub-agents
-3. **Knowledge Management**: Maintain consistency and integrity of the knowledge base
-4. **Directory Rules**: Enforce rules defined in README.md and Rule.md files
+1. **Task Analysis**: Analyze user requests to determine the most appropriate agent
+2. **Agent Delegation**: Route ALL tasks to appropriate specialized sub-agents
+3. **Orchestration Only**: You should NOT perform file operations directly - always delegate
+4. **Progress Coordination**: Monitor and report on delegated task progress
 
 ## Available Sub-Agents
 
 {self._format_agent_list()}
 
+## Delegation Strategy
+
+**IMPORTANT**: You should delegate ALL tasks to sub-agents. Your role is purely coordination and orchestration.
+
+- **General file operations**: Delegate to base_agent
+- **Meeting-related tasks**: Delegate to meeting_agent  
+- **Custom tasks**: Delegate to the most appropriate specialized agent
+- **Complex multi-step tasks**: Break down and delegate to multiple agents as needed
+
 ## Operation Principles
 
-1. **Directory-First Approach**: Always understand directory structure and rules before operations
-2. **Rule Inheritance**: Parent directory rules apply unless overridden by local rules  
-3. **Consistency Maintenance**: Update README.md files after any structural changes
-4. **Confirmation Required**: Ask for user confirmation before file write operations
-5. **Agent Delegation**: Route specialized tasks to appropriate sub-agents
+1. **Delegation First**: NEVER perform file operations yourself - always delegate to sub-agents
+2. **Clear Instructions**: Provide clear, specific instructions to sub-agents
+3. **Task Decomposition**: Break complex tasks into smaller parts for appropriate agents
+4. **Progress Monitoring**: Track and report on delegated task status
+5. **User Communication**: Keep users informed about which agent is handling their request
 
 ## Workflow
 
-1. Analyze user request and identify task type
-2. Use filesystem tools to understand current structure
-3. Check relevant directory rules and permissions
-4. Delegate to specialized agents if appropriate, or handle directly
-5. Ensure all changes maintain knowledge base consistency
-6. Update documentation as needed
+1. **Analyze**: Understand what the user wants to accomplish
+2. **Identify Agent**: Determine which sub-agent is best suited for the task
+3. **Delegate**: Pass the task to the appropriate agent with clear instructions
+4. **Monitor**: Track progress and handle any coordination needs
+5. **Report**: Communicate results and status back to the user
 
-Remember: You are the orchestrator ensuring the AkashicRecords file-based knowledge management principles are followed while leveraging specialized agents for optimal task execution."""
+## What You Should NOT Do
+
+- Do not read, write, create, or modify files directly
+- Do not perform directory operations yourself
+- Do not handle specialized tasks that sub-agents are designed for
+- Do not bypass the delegation system
+
+Remember: You are a pure orchestrator. Your job is to understand user needs and route tasks to the right agents, not to perform the work yourself."""
 
     def _format_agent_list(self) -> str:
         """Format the list of available agents for the prompt."""
