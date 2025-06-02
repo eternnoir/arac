@@ -1,0 +1,56 @@
+{
+  "project": {
+    "name": "AkashicRecords Basic Project",
+    "type": "knowledge-management",
+    "root_path": "."
+  },
+  "agents": {
+    "coordinator": {
+      "type": "akashic_coordinator",
+      "enabled": true,
+      "model": "openai/gpt-4.1",
+      "prompt_template": "prompts/coordinator.md",
+      "permissions": ["read", "write", "create", "delete"]
+    },
+    "base_agent": {
+      "type": "akashic_base",
+      "enabled": true,
+      "model": "openai/gpt-4.1",
+      "prompt_template": "prompts/base_agent.md",
+      "permissions": ["read", "write", "create"],
+      "custom_config": {
+        "enable_readme_maintenance": true,
+        "auto_update_cross_references": true
+      }
+    },
+    "meeting_agent": {
+      "type": "meeting_minutes",
+      "enabled": true,
+      "model": "openai/gpt-4.1",
+      "prompt_template": "prompts/meeting_agent.md",
+      "permissions": ["read", "write", "create"],
+      "target_directories": ["Meetings", "討論紀錄", "會議記錄"],
+      "custom_config": {
+        "default_language": "zh-TW",
+        "attendee_format": "English Name (Chinese Name)",
+        "auto_generate_action_items": true
+      }
+    }
+  },
+  "mcpServers": {
+    "filesystem": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-filesystem",
+        "."
+      ]
+    }
+  },
+  "workflow": {
+    "default_agent": "coordinator",
+    "delegation_strategy": "llm_driven",
+    "enable_parallel_execution": true,
+    "confirmation_required": true
+  }
+}
