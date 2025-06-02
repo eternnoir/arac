@@ -1,8 +1,7 @@
 {
   "project": {
     "name": "AkashicRecords Basic Project",
-    "type": "knowledge-management",
-    "root_path": "."
+    "type": "knowledge-management"
   },
   "agents": {
     "coordinator": {
@@ -10,6 +9,7 @@
       "enabled": true,
       "model": "openai/gpt-4.1",
       "prompt_template": "prompts/coordinator.md",
+      "tools": ["mcp_filesystem"],
       "permissions": ["read", "write", "create", "delete"]
     },
     "base_agent": {
@@ -17,6 +17,7 @@
       "enabled": true,
       "model": "openai/gpt-4.1",
       "prompt_template": "prompts/base_agent.md",
+      "tools": ["mcp_filesystem"],
       "permissions": ["read", "write", "create"],
       "custom_config": {
         "enable_readme_maintenance": true,
@@ -28,6 +29,7 @@
       "enabled": true,
       "model": "openai/gpt-4.1",
       "prompt_template": "prompts/meeting_agent.md",
+      "tools": ["mcp_filesystem"],
       "permissions": ["read", "write", "create"],
       "target_directories": ["Meetings", "討論紀錄", "會議記錄"],
       "custom_config": {
@@ -37,20 +39,9 @@
       }
     }
   },
-  "mcpServers": {
+  "mcp_tools": {
     "filesystem": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-filesystem",
-        "."
-      ]
+      "enabled": true
     }
-  },
-  "workflow": {
-    "default_agent": "coordinator",
-    "delegation_strategy": "llm_driven",
-    "enable_parallel_execution": true,
-    "confirmation_required": true
   }
 }

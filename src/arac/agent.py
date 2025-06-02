@@ -28,7 +28,7 @@ def create_root_agent():
         print(f"✅ Config loaded successfully")
         
         # Create the coordinator agent
-        coordinator = AkashicCoordinator(config)
+        coordinator = AkashicCoordinator(config, project_path)
         print(f"DEBUG: Coordinator created successfully")
         
         return coordinator.create_agent_hierarchy()

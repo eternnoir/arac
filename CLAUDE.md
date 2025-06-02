@@ -75,9 +75,9 @@ ARAC (AkashicRecords Agent Client) is a multi-agent orchestration system built o
 
 #### Agent Factory (`src/arac/core/agent_factory.py`)
 - Factory pattern for creating specialized agents based on configuration
-- Supports agent types: `akashic_base`, `meeting_minutes`, `template_manager`, `custom`
-- Handles prompt template loading and tool assignment
-- Each agent type has specific capabilities and target directories
+- Uses generic agent implementation with prompt-driven specialization
+- Supports flexible agent types through configuration
+- Handles prompt template loading and tool assignment from `.arclient/prompts/`
 
 #### Configuration System (`src/arac/core/config_loader.py`)
 Projects use `.arclient/config.json` for agent configuration:
@@ -94,16 +94,11 @@ Projects use `.arclient/config.json` for agent configuration:
 - Maintains knowledge base consistency
 - Enforces directory rules and AkashicRecords principles
 
-#### Base Agent (`src/arac/agents/base_agent.py`)
-- Core AkashicRecords file operations
-- File CRUD operations following directory structure rules
-- README.md maintenance and cross-reference tracking
-- Directory-first organization approach
-
-#### Meeting Agent (`src/arac/agents/meeting_agent.py`)
-- Processes meeting transcripts and creates structured minutes
-- Works with target directories like `Meetings/`, `會議記錄/`
-- Integrates with existing meeting context and previous minutes
+#### Generic Agent (`src/arac/agents/generic_agent.py`)
+- Unified agent implementation driven by configuration and prompts
+- Specialization through prompt templates in `.arclient/prompts/`
+- Supports any agent type with appropriate tools and instructions
+- Flexible architecture allowing custom agent behaviors
 
 ### Integration Layer (`src/arac/integrations/`)
 
@@ -137,9 +132,9 @@ The system enforces these core principles:
 
 ### Development Workflow
 1. Agents are created through the factory pattern based on `.arclient/config.json`
-2. Coordinator loads project-specific prompts from `.arclient/prompts/`
+2. Generic agents are specialized using prompt templates from `.arclient/prompts/`
 3. MCP tools provide secure filesystem access within project boundaries
-4. Specialized agents handle domain-specific tasks (meetings, templates, etc.)
+4. Agents handle domain-specific tasks based on their prompt configuration
 5. All operations maintain AkashicRecords methodology compliance
 
 ### Error Handling and Fallbacks

@@ -22,16 +22,17 @@ class AkashicCoordinator:
     and coordinates with specialized agents.
     """
     
-    def __init__(self, config: ProjectConfig):
+    def __init__(self, config: ProjectConfig, project_root: str = '.'):
         """
         Initialize the coordinator with project configuration.
         
         Args:
             config: Project configuration loaded from .arclient
+            project_root: Project root path (from environment or discovery)
         """
         self.config = config
-        self.project_root = config.project.get('root_path', '.')
-        self.factory = AgentFactory(config)
+        self.project_root = project_root
+        self.factory = AgentFactory(config, project_root)
         
     def create_agent_hierarchy(self) -> Agent:
         """
@@ -51,10 +52,7 @@ class AkashicCoordinator:
         # Create MCP filesystem tools
         mcp_tools = []
         if self.config.mcp_tools.filesystem['enabled']:
-            filesystem_toolset = create_filesystem_toolset(
-                self.project_root,
-                self.config.mcp_tools.filesystem.get('tools', [])
-            )
+            filesystem_toolset = create_filesystem_toolset(self.project_root)
             mcp_tools.append(filesystem_toolset)
         
         # Create specialized sub-agents

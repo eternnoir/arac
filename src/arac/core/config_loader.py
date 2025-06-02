@@ -17,6 +17,7 @@ class AgentConfig(BaseModel):
     enabled: bool = True
     model: str = "openai/gpt-4o"
     prompt_template: Optional[str] = None
+    tools: List[str] = ["mcp_filesystem"]
     permissions: List[str] = ["read"]
     target_directories: List[str] = []
     custom_config: Dict[str, Any] = {}
@@ -25,9 +26,7 @@ class AgentConfig(BaseModel):
 class MCPConfig(BaseModel):
     """Configuration for MCP tools."""
     filesystem: Dict[str, Any] = {
-        "enabled": True,
-        "root_path": ".",
-        "tools": ["read_file", "write_file", "list_directory", "create_directory"]
+        "enabled": True
     }
 
 
@@ -115,8 +114,7 @@ def create_default_config(project_root: str) -> ProjectConfig:
     return ProjectConfig(
         project={
             "name": project_name,
-            "type": "general",
-            "root_path": "."
+            "type": "general"
         },
         agents={
             "coordinator": AgentConfig(
@@ -124,6 +122,7 @@ def create_default_config(project_root: str) -> ProjectConfig:
                 enabled=True,
                 model="openai/gpt-4o",
                 prompt_template="prompts/coordinator.md",
+                tools=["mcp_filesystem"],
                 permissions=["read", "write", "create"]
             ),
             "base_agent": AgentConfig(
@@ -131,6 +130,7 @@ def create_default_config(project_root: str) -> ProjectConfig:
                 enabled=True,
                 model="openai/gpt-4o", 
                 prompt_template="prompts/base_agent.md",
+                tools=["mcp_filesystem"],
                 permissions=["read", "write", "create"]
             )
         }
