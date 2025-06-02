@@ -47,10 +47,11 @@ uv run pytest
 export ARAC_PROJECT_PATH=/path/to/your/project
 
 # Run with ADK CLI
-adk run /home/frank/src/arac/src/arac
+adk run /path/to/arac/src/arac
 
 # Run with ADK web interface
-adk web /home/frank/src/arac/src/arac
+cd /path/to/arac/src
+adk web
 ```
 
 ## Architecture Overview
@@ -104,18 +105,14 @@ Projects use `.arclient/config.json` for agent configuration:
 
 #### MCP Filesystem (`mcp_filesystem.py`)
 - Provides file system operations through Model Context Protocol
-- Tools: read_file, write_file, list_directory, create_directory, search_files
+- Tools: read_file, write_file, list_directory, create_directory, search_files, get_file_info, move_file
 - Root path restrictions for security
 
 #### Multi-Model Support (`multi_model.py`)
 - LiteLLM integration for multiple model providers
-- Supports OpenAI GPT-4.1, Claude, Gemini
+- Supports OpenAI GPT-4o, Claude, Gemini
 - Configurable model routing per agent
 
-#### AkashicRecords MCP (`akashic_mcp.py`)
-- Specialized MCP tools for AkashicRecords methodology
-- Directory rule enforcement and validation
-- Cross-reference tracking and maintenance
 
 ### Project Discovery (`src/arac/utils/project_discovery.py`)
 - Automatic detection of project root via `ARAC_PROJECT_PATH` or `.arclient` directories

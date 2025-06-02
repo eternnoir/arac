@@ -12,7 +12,7 @@ The AkashicRecords Agent Client (arac) is a sophisticated multi-agent orchestrat
 - **AkashicRecords Integration**: Built-in understanding of directory rules and file organization
 - **Flexible Configuration**: Project-specific agent combinations via `.arclient` folders
 - **MCP Filesystem Support**: Native file system operations through Model Context Protocol
-- **Multi-Model Support**: OpenAI GPT-4.1, Claude, Gemini, and other LLM providers
+- **Multi-Model Support**: OpenAI GPT-4o, Claude, Gemini, and other LLM providers
 - **Template-Based Setup**: Quick start with predefined agent configurations
 
 ## Quick Start
@@ -50,7 +50,8 @@ export ARAC_PROJECT_PATH=/path/to/your/project
 adk run /path/to/arac/src/arac
 
 # Or use the web interface
-adk web /path/to/arac/src/arac
+cd /path/to/arac/src
+adk web
 ```
 
 ## Project Structure
@@ -85,7 +86,6 @@ arac/
       integrations/        # External integrations
          mcp_filesystem.py # MCP filesystem tools
          multi_model.py   # Multi-model support
-         akashic_mcp.py   # AkashicRecords MCP tools
       utils/               # Utilities
           project_discovery.py # Project auto-discovery
           validation.py    # Configuration validation
@@ -110,21 +110,21 @@ The main configuration file defines your agent setup:
     "coordinator": {
       "type": "akashic_coordinator",
       "enabled": true,
-      "model": "openai/gpt-4.1-preview",
+      "model": "openai/gpt-4o",
       "prompt_template": "prompts/coordinator.md",
       "permissions": ["read", "write", "create", "delete"]
     },
     "base_agent": {
       "type": "akashic_base",
       "enabled": true,
-      "model": "openai/gpt-4.1-preview",
+      "model": "openai/gpt-4o",
       "prompt_template": "prompts/base_agent.md",
       "permissions": ["read", "write", "create"]
     },
     "meeting_agent": {
       "type": "meeting_minutes",
       "enabled": true,
-      "model": "openai/gpt-4.1-preview",
+      "model": "openai/gpt-4o",
       "prompt_template": "prompts/meeting_agent.md",
       "permissions": ["read", "write", "create"],
       "target_directories": ["Meetings", "會議記錄"]
@@ -171,12 +171,12 @@ ARAC_LOG_LEVEL=INFO
 ### Coordinator Agent
 - **Purpose**: Main orchestrator and user interface
 - **Capabilities**: Task delegation, multi-agent coordination, user interaction
-- **Model**: Typically GPT-4.1 for complex reasoning
+- **Model**: Typically GPT-4o for complex reasoning
 
 ### Generic Agent
 - **Purpose**: Flexible agent implementation specialized through prompts
 - **Capabilities**: Any task based on prompt configuration and tool assignment
-- **Model**: Configurable per instance (GPT-4.1, Claude, Gemini, etc.)
+- **Model**: Configurable per instance (GPT-4o, Claude, Gemini, etc.)
 
 ## Usage Examples
 
