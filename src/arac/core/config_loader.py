@@ -20,6 +20,8 @@ class AgentConfig(BaseModel):
     tools: List[str] = ["mcp_filesystem"]
     permissions: List[str] = ["read"]
     target_directories: List[str] = []
+    max_output_tokens: Optional[int] = None
+    max_context_tokens: Optional[int] = None
     custom_config: Dict[str, Any] = {}
 
 

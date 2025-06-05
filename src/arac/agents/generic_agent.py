@@ -17,6 +17,8 @@ def create_agent(
     prompt_template: Optional[str] = None,
     tools: Optional[List] = None,
     description: Optional[str] = None,
+    max_output_tokens: Optional[int] = None,
+    max_context_tokens: Optional[int] = None,
     **kwargs
 ) -> Agent:
     """
@@ -42,9 +44,16 @@ def create_agent(
     # Use provided description or generate one
     agent_description = description or f"AI assistant: {name}"
     
+    # Build model kwargs
+    model_kwargs = {"model": model}
+    if max_output_tokens:
+        model_kwargs["max_completion_tokens"] = max_output_tokens
+    if max_context_tokens:
+        model_kwargs["max_tokens"] = max_context_tokens
+    
     return Agent(
         name=name,
-        model=LiteLlm(model=model),
+        model=LiteLlm(**model_kwargs),
         description=agent_description,
         instruction=prompt_content,
         tools=tools or []

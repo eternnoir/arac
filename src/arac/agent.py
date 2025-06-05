@@ -40,9 +40,19 @@ def create_root_agent():
         traceback.print_exc()
         print("Falling back to basic AkashicRecords agent")
         
+        # Try to get fallback token limits from environment
+        fallback_max_output = os.environ.get('ARAC_FALLBACK_MAX_OUTPUT_TOKENS')
+        fallback_max_context = os.environ.get('ARAC_FALLBACK_MAX_CONTEXT_TOKENS')
+        
+        model_kwargs = {"model": "openai/gpt-4o"}
+        if fallback_max_output:
+            model_kwargs["max_tokens"] = int(fallback_max_output)
+        if fallback_max_context:
+            model_kwargs["max_completion_tokens"] = int(fallback_max_context)
+            
         return Agent(
             name="akashic_records_fallback",
-            model=LiteLlm(model="openai/gpt-4o"),
+            model=LiteLlm(**model_kwargs),
             description="Basic AkashicRecords agent (fallback mode)",
             instruction="You are a basic file management assistant. Help users organize and manage their files and documents.",
             tools=[]

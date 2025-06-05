@@ -53,9 +53,15 @@ class AkashicCoordinator:
         sub_agents = self._create_sub_agents()
         
         # Create the coordinator agent (no filesystem tools - pure orchestration)
+        model_kwargs = {"model": coordinator_config.model}
+        if coordinator_config.max_output_tokens:
+            model_kwargs["max_completion_tokens"] = coordinator_config.max_output_tokens
+        if coordinator_config.max_context_tokens:
+            model_kwargs["max_tokens"] = coordinator_config.max_context_tokens
+            
         coordinator = Agent(
             name="akashic_coordinator",
-            model=LiteLlm(model=coordinator_config.model),
+            model=LiteLlm(**model_kwargs),
             description="AkashicRecords coordinator agent for task delegation and orchestration",
             instruction=prompt_content,
             tools=[],  # No direct tools - pure delegation

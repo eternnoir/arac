@@ -57,7 +57,9 @@ class AgentFactory:
                 description=f"Agent: {name} (type: {agent_config.type})",
                 agent_type=agent_config.type,
                 permissions=agent_config.permissions,
-                target_directories=getattr(agent_config, 'target_directories', None)
+                target_directories=getattr(agent_config, 'target_directories', None),
+                max_output_tokens=agent_config.max_output_tokens,
+                max_context_tokens=agent_config.max_context_tokens
             )
         except Exception as e:
             print(f"Error creating agent '{name}': {e}")
